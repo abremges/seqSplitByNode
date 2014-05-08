@@ -65,7 +65,7 @@ void processFile(const char *file, const int n, const int N, const int p) {
 }
 
 static int usage() {
-	fprintf(stderr, "\nUsage: seqSplitByNode [options] [file ...]\n\n");
+    fprintf(stderr, "\nUsage: seqSplitByNode [options] [file ...]\n\n");
     fprintf(stderr, "Options:\n");
     fprintf(stderr, "       -n INT  Node ID\n");
     fprintf(stderr, "       -N INT  Total number of nodes\n");
