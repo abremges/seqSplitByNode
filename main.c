@@ -31,20 +31,20 @@
 KSEQ_INIT(gzFile, gzread)
 
 void stk_printseq(const kseq_t *s) {
-	fputc(s->qual.l? '@' : '>', stdout);
-	fputs(s->name.s, stdout);
-	if (s->comment.l) {
-			fputc(' ', stdout);
-			fputs(s->comment.s, stdout);
-	}
-	fputc('\n', stdout);
-	fputs(s->seq.s, stdout);
-	fputc('\n', stdout);
-	if (s->qual.l) {
-			fputs("+\n", stdout);
-			fputs(s->qual.s, stdout);
-			fputc('\n', stdout);
-	}
+    fputc(s->qual.l? '@' : '>', stdout);
+    fputs(s->name.s, stdout);
+    if (s->comment.l) {
+        fputc(' ', stdout);
+        fputs(s->comment.s, stdout);
+    }
+    fputc('\n', stdout);
+    fputs(s->seq.s, stdout);
+    fputc('\n', stdout);
+    if (s->qual.l) {
+        fputs("+\n", stdout);
+        fputs(s->qual.s, stdout);
+        fputc('\n', stdout);
+    }
 }
 
 void processFile(const char *file, const int n, const int N, const int p) {
@@ -74,25 +74,25 @@ static int usage() {
 }
 
 int main(int argc, char *argv[]) {
-	char *file = 0;
-	int c, n = 0, N = 1, p = 0;
-	while((c = getopt(argc, argv, "n:N:p")) != -1) {
-		switch (c) {
-			case 'n':
-				n = atoi(optarg);
-				if (n < 0) n = 0;
-				break;
+    char *file = 0;
+    int c, n = 0, N = 1, p = 0;
+    while((c = getopt(argc, argv, "n:N:p")) != -1) {
+        switch (c) {
+            case 'n':
+            n = atoi(optarg);
+            if (n < 0) n = 0;
+            break;
             case 'N':
-                N = atoi(optarg);
-                if (N < 1) N = 1;
-                break;
+            N = atoi(optarg);
+            if (N < 1) N = 1;
+            break;
             case 'p':
-                p = 1;
-                break;
-			default:
-				return usage();
-		}
-	}
+            p = 1;
+            break;
+            default:
+            return usage();
+        }
+    }
 
     if (n <= N) {
         n %= N;
@@ -105,5 +105,5 @@ int main(int argc, char *argv[]) {
         }
     } else return usage();
 
-	return 0;
+    return 0;
 }
