@@ -79,17 +79,17 @@ int main(int argc, char *argv[]) {
     while((c = getopt(argc, argv, "n:N:p")) != -1) {
         switch (c) {
             case 'n':
-            n = atoi(optarg);
-            if (n < 0) n = 0;
-            break;
+                n = atoi(optarg);
+                if (n < 0) n = 0;
+                break;
             case 'N':
-            N = atoi(optarg);
-            if (N < 1) N = 1;
-            break;
+                N = atoi(optarg);
+                if (N < 1) N = 1;
+                break;
             case 'p':
-            p = 1;
-            break;
-            default:
+                p = 1;
+                break;
+                default:
             return usage();
         }
     }
