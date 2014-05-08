@@ -30,8 +30,8 @@
 #include "kseq.h"
 KSEQ_INIT(gzFile, gzread)
 
-void stk_printseq(const kseq_t *s) {
-    fputc(s->qual.l? '@' : '>', stdout);
+void stk_printseq(const kseq_t *s, const int A) {
+    fputc((s->qual.l && !A)? '@' : '>', stdout);
     fputs(s->name.s, stdout);
     if (s->comment.l) {
         fputc(' ', stdout);
@@ -40,23 +40,23 @@ void stk_printseq(const kseq_t *s) {
     fputc('\n', stdout);
     fputs(s->seq.s, stdout);
     fputc('\n', stdout);
-    if (s->qual.l) {
+    if (s->qual.l && !A) {
         fputs("+\n", stdout);
         fputs(s->qual.s, stdout);
         fputc('\n', stdout);
     }
 }
 
-void processFile(const char *file, const int n, const int N, const int p) {
+void processFile(const char *file, const int n, const int N, const int p, const int A) {
     gzFile fp = strcmp(file, "-") ? gzopen(file, "r") : gzdopen(fileno(stdin), "r");
     kseq_t *r = kseq_init(fp);
     static long n_seqs = 0;
     while (kseq_read(r) >= 0) {
         ++n_seqs;
         if (n_seqs % N == n) {
-            stk_printseq(r);
+            stk_printseq(r, A);
             if (p && kseq_read(r) >= 0) {
-                stk_printseq(r);
+                stk_printseq(r, A);
             }
         }
     }
@@ -69,14 +69,15 @@ static int usage() {
     fprintf(stderr, "Options:\n");
     fprintf(stderr, "       -n INT  Node ID\n");
     fprintf(stderr, "       -N INT  Total number of nodes\n");
-    fprintf(stderr, "       -p      Treat reads as pairs\n\n");
+    fprintf(stderr, "       -p      Treat reads as pairs\n");
+    fprintf(stderr, "       -A      Force FastA output\n\n");
     return 1;
 }
 
 int main(int argc, char *argv[]) {
     char *file = 0;
-    int c, n = 0, N = 1, p = 0;
-    while((c = getopt(argc, argv, "n:N:p")) != -1) {
+    int c, n = 0, N = 1, p = 0, A = 0;
+    while((c = getopt(argc, argv, "n:N:pA")) != -1) {
         switch (c) {
             case 'n':
                 n = atoi(optarg);
@@ -88,6 +89,9 @@ int main(int argc, char *argv[]) {
                 break;
             case 'p':
                 p = 1;
+                break;
+            case 'A':
+                A = 1;
                 break;
             default:
                 return usage();
@@ -101,7 +105,7 @@ int main(int argc, char *argv[]) {
     if (optind < argc) {
         while (optind < argc) {
             file = argv[optind++];
-            processFile(file, n, N, p);
+            processFile(file, n, N, p, A);
         }
     } else return usage();
 
